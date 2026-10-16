@@ -1,3 +1,4 @@
+import { prisma } from './db';
 import "dotenv/config";
 import { app } from "./app";
 
