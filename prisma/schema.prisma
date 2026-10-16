@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Municipio {
+  id     Int     @id @default(autoincrement())
+  nome   String
+  uf     String
+  campos Campo[]
+
+  @@unique([nome, uf])
+}
+
+model Especialidade {
+  id           Int           @id @default(autoincrement())
+  nome         String        @unique
+  consultorios Consultorio[]
+}
+
+model Campo {
+  id            Int           @id @default(autoincrement())
+  nome          String
+  endereco      String
+  classificacao String
+  municipioId   Int
+  municipio     Municipio     @relation(fields: [municipioId], references: [id])
+  consultorios  Consultorio[]
+}
+
+model Consultorio {
+  id              Int           @id @default(autoincrement())
+  numero          Int
+  campoId         Int
+  especialidadeId Int
+  capacidadeMin   Int
+  capacidadeMax   Int
+  campo           Campo         @relation(fields: [campoId], references: [id])
+  especialidade   Especialidade @relation(fields: [especialidadeId], references: [id])
+
+  @@unique([campoId, numero])
+}
